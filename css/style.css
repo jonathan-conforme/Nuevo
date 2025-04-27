@@ -1,0 +1,13 @@
+body {
+    background-color: #f0f8ff;
+  }
+  
+  h1, h3 {
+    color: #333;
+  }
+  
+  #resultadoHielo, #resultadoVaso, #totalInvertido, #ganancia {
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  

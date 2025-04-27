@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculadora de Ventas</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+ 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .calculator-section {
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .results {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    /* Puedes agregar un estilo personalizado aquí si es necesario */
+    .table th, .table td {
+            text-align: center;
+        }
+        .table thead {
+            background-color: #007bff;
+            color: white;
+        }
+        .table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+        .table tbody tr:nth-child(even) {
+            background-color: #e9ecef;
+        }
+        .table-container {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    
+    <h1 class="text-center mb-4">Calculadora de Ventas: Hielo y Vasos</h1>
+
+    <!-- Calculadora de Venta -->
+    <div class="calculator-section">
+      <h2 class="mb-4">Calculadora de Venta</h2>
+      <!-- Tabla de referencia de costos -->
+      <div class="mt-4">
+        <h4>Tabla de Referencia de Costos</h4>
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Precio total</th>
+                <th>Precio Unitario</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Funda gruesa 12</td>
+                <td>500</td>
+                <td>$23.76</td>
+                <td>$0.04</td>
+              </tr>
+              <tr>
+                <td>Funda gruesa 10</td>
+                <td>100</td>
+                <td>$4.04</td>
+                <td>$0.06</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  
+      <form id="ventaForm" class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Tipo de producto:</label>
+          <select class="form-select" id="tipoProducto" required onchange="actualizarCostoUnitario()">
+            <option value="">Selecciona una opción</option>
+            <option value="funda12">Funda gruesa 12</option>
+            <option value="funda10">Funda gruesa 10</option>
+            <option value="vaso">Vaso con hielo</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Precio de venta ($):</label>
+          <input type="number" class="form-control" id="precioVenta" placeholder="Precio de venta" step="0.01" required>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Cantidad vendida:</label>
+          <input type="number" class="form-control" id="cantidadVendida" placeholder="Cantidad vendida" required>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Costo unitario ($):</label>
+          <input type="number" class="form-control" id="costoUnitario" placeholder="Costo por unidad" step="0.01" required>
+        </div>
+
+        <div class="col-12 text-center mt-4">
+          <button type="submit" class="btn btn-primary">Calcular Venta</button>
+        </div>
+      </form>
+
+      <div class="results">
+        <h4>Resultados de Venta</h4>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Descripción</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Producto</td>
+                <td id="celdaProducto">-</td>
+              </tr>
+              <tr>
+                <td>Precio Venta</td>
+                <td id="celdaPrecioUnitario">$0.00</td>
+              </tr>
+              <tr>
+                <td>Cantidad</td>
+                <td id="celdaCantidad">0</td>
+              </tr>
+              <tr>
+                <td>Costo total de funda</td>
+                <td id="celdaCostoTotal">$0.00</td>
+              </tr>
+              <tr>
+                <tr>
+                  <td>Ganancia por unidad</td>
+                  <td id="celdaGananciaUnidad">$0.00</td>
+                </tr>
+              </tr>
+                <td>Ganancia Total</td>
+                <td id="celdaGanancia">$0.00</td>
+              </tr>
+              <tr class="table-success">
+                <td>Venta total</td>
+                <td id="celdaVentaTotal">$0.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Función para actualizar el costo unitario según la selección
+    function actualizarCostoUnitario() {
+      const tipoProducto = document.getElementById('tipoProducto').value;
+      const costoUnitarioInput = document.getElementById('costoUnitario');
+      
+      switch(tipoProducto) {
+        case 'funda12':
+          costoUnitarioInput.value = '0.04';
+          break;
+        case 'funda10':
+          costoUnitarioInput.value = '0.06';
+          break;
+        case 'vaso':
+          costoUnitarioInput.value = ''; // Limpiar para ingreso manual
+          break;
+        default:
+          costoUnitarioInput.value = '';
+      }
+      
+      // Calcular automáticamente si hay datos suficientes
+      calcularVenta();
+    }
+
+    document.getElementById('ventaForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      calcularVenta();
+    });
+
+    // Calcular automáticamente al cambiar valores
+    document.getElementById('precioVenta').addEventListener('change', calcularVenta);
+    document.getElementById('cantidadVendida').addEventListener('change', calcularVenta);
+    document.getElementById('costoUnitario').addEventListener('change', calcularVenta);
+
+    function calcularVenta() {
+      const tipoProducto = document.getElementById('tipoProducto').value;
+      const precioVenta = parseFloat(document.getElementById('precioVenta').value) || 0;
+      const cantidadVendida = parseInt(document.getElementById('cantidadVendida').value) || 0;
+      const costoUnitario = parseFloat(document.getElementById('costoUnitario').value) || 0;
+
+      if (tipoProducto === "") {
+        return; // No calculamos sin tipo de producto
+      }
+
+      // Determinar nombre del producto para mostrar
+      let nombreProducto = "";
+      switch(tipoProducto) {
+        case 'funda12':
+          nombreProducto = "Funda gruesa 12";
+          break;
+        case 'funda10':
+          nombreProducto = "Funda gruesa 10";
+          break;
+        case 'vaso':
+          nombreProducto = "Vaso con hielo";
+          break;
+      }
+
+      // Calcular valores
+      const ventaTotal = precioVenta * cantidadVendida;
+      const costoTotal = costoUnitario * cantidadVendida;
+      const ganancia = ventaTotal - costoTotal;
+      const gananciaUnidad = precioVenta - costoUnitario;
+
+      // Actualizar la tabla de resultados
+      document.getElementById('celdaProducto').textContent = nombreProducto;
+      document.getElementById('celdaPrecioUnitario').textContent = `$${precioVenta.toFixed(2)}`;
+      document.getElementById('celdaCantidad').textContent = cantidadVendida;
+      document.getElementById('celdaVentaTotal').textContent = `$${ventaTotal.toFixed(2)}`;
+      document.getElementById('celdaCostoTotal').textContent = `$${costoTotal.toFixed(2)}`;
+      document.getElementById('celdaGanancia').textContent = `$${ganancia.toFixed(2)}`;
+      document.getElementById('celdaGananciaUnidad').textContent = `$${gananciaUnidad.toFixed(2)}`;
+    }
+
+    // Calcular al cargar si hay valores
+    window.addEventListener('load', function() {
+      if (document.getElementById('tipoProducto').value !== "") {
+        calcularVenta();
+      }
+    });
+  </script>
+</body>
+</html>
